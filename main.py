@@ -56,25 +56,20 @@ api_url = "http://master-api-v3.vercel.app/"
 api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNzkxOTMzNDE5NSIsInRnX3VzZXJuYW1lIjoi4p61IFtvZmZsaW5lXSIsImlhdCI6MTczODY5MjA3N30.SXzZ1MZcvMp5sGESj0hBKSghhxJ3k1GTWoBUbivUe1I"
 token_cp ='eyJjb3Vyc2VJZCI6IjQ1NjY4NyIsInR1dG9ySWQiOm51bGwsIm9yZ0lkIjo0ODA2MTksImNhdGVnb3J5SWQiOm51bGx9r'
 adda_token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkcGthNTQ3MEBnbWFpbC5jb20iLCJhdWQiOiIxNzg2OTYwNSIsImlhdCI6MTc0NDk0NDQ2NCwiaXNzIjoiYWRkYTI0Ny5jb20iLCJuYW1lIjoiZHBrYSIsImVtYWlsIjoiZHBrYTU0NzBAZ21haWwuY29tIiwicGhvbmUiOiI3MzUyNDA0MTc2IiwidXNlcklkIjoiYWRkYS52MS41NzMyNmRmODVkZDkxZDRiNDkxN2FiZDExN2IwN2ZjOCIsImxvZ2luQXBpVmVyc2lvbiI6MX0.0QOuYFMkCEdVmwMVIPeETa6Kxr70zEslWOIAfC_ylhbku76nDcaBoNVvqN4HivWNwlyT0jkUKjWxZ8AbdorMLg"
-photologo = 'https://i.ibb.co/v6Vr7HCt/1000003297.png' #https://envs.sh/GV0.jpg
-photoyt = 'https://i.ibb.co/v6Vr7HCt/1000003297.png' #https://envs.sh/GVi.jpg
-photocp = 'https://i.ibb.co/v6Vr7HCt/1000003297.jpg'
-photozip = 'https://i.ibb.co/v6Vr7HCt/1000003297.jpg'
+photologo = 'https://files.catbox.moe/28epkq.jpg'
+photoyt = 'https://files.catbox.moe/28epkq.jpg'
+photocp = 'https://files.catbox.moe/28epkq.jpg'
+photozip = 'https://files.catbox.moe/28epkq.jpg'
 
 
 # Inline keyboard for start command
 BUTTONSCONTACT = InlineKeyboardMarkup([[InlineKeyboardButton(text="📞 Contact", url="https://t.me/itsgolu7")]])
-keyboard = InlineKeyboardMarkup(
-    [
-        #[InlineKeyboardButton(text="🛠️ Help", url="https://t.me/+3k-1zcJxINYwNGZl"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
-    ]
-)
+keyboard = InlineKeyboardMarkup([])
 
 # Image URLs for the random image feature
 image_urls = [
-    "https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
-    "https://i.ibb.co/v6Vr7HCt/1000003297.png",
-    # Add more image URLs as needed
+    "https://files.catbox.moe/28epkq.jpg",
+    "https://files.catbox.moe/28epkq.jpg",
 ]
 
 @bot.on_message(filters.command("addauth") & filters.private)
@@ -96,7 +91,7 @@ async def list_auth_users(client: Client, message: Message):
     if message.chat.id != OWNER:
         return
     
-    user_list = '\n'.join(map(str, AUTH_USERS))  # AUTH_USERS ki list dikhayenge
+    user_list = '\n'.join(map(str, AUTH_USERS))
     await message.reply_text(f"**Authorized Users:**\n{user_list}")
 
 @bot.on_message(filters.command("rmauth") & filters.private)
@@ -126,24 +121,20 @@ async def broadcast_handler(client: Client, message: Message):
     fail = 0
     for user_id in list(set(TOTAL_USERS)):
         try:
-            # Text
             if message.reply_to_message.text:
                 await client.send_message(user_id, message.reply_to_message.text)
-            # Photo
             elif message.reply_to_message.photo:
                 await client.send_photo(
                     user_id,
                     photo=message.reply_to_message.photo.file_id,
                     caption=message.reply_to_message.caption or ""
                 )
-            # Video
             elif message.reply_to_message.video:
                 await client.send_video(
                     user_id,
                     video=message.reply_to_message.video.file_id,
                     caption=message.reply_to_message.caption or ""
                 )
-            # Document
             elif message.reply_to_message.document:
                 await client.send_document(
                     user_id,
@@ -198,22 +189,17 @@ async def cookies_handler(client: Client, m: Message):
     )
 
     try:
-        # Wait for the user to send the cookies file
         input_message: Message = await client.listen(m.chat.id)
 
-        # Validate the uploaded file
         if not input_message.document or not input_message.document.file_name.endswith(".txt"):
             await m.reply_text("Invalid file type. Please upload a .txt file.")
             return
 
-        # Download the cookies file
         downloaded_path = await input_message.download()
 
-        # Read the content of the uploaded file
         with open(downloaded_path, "r") as uploaded_file:
             cookies_content = uploaded_file.read()
 
-        # Replace the content of the target cookies file
         with open(cookies_file_path, "w") as target_file:
             target_file.write(cookies_content)
 
@@ -229,7 +215,6 @@ async def cookies_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["t2t"]))
 async def text_to_txt(client, message: Message):
     user_id = str(message.from_user.id)
-    # Inform the user to send the text data and its desired file name
     editable = await message.reply_text(f"<blockquote><b>Welcome to the Text to .txt Converter!\nSend the **text** for convert into a `.txt` file.</b></blockquote>")
     input_message: Message = await bot.listen(message.chat.id)
     if not input_message.text:
@@ -237,12 +222,12 @@ async def text_to_txt(client, message: Message):
         return
 
     text_data = input_message.text.strip()
-    await input_message.delete()  # Corrected here
+    await input_message.delete()
     
     await editable.edit("**🔄 Send file name or send /d for filename**")
     inputn: Message = await bot.listen(message.chat.id)
     raw_textn = inputn.text
-    await inputn.delete()  # Corrected here
+    await inputn.delete()
     await editable.delete()
 
     if raw_textn == '/d':
@@ -251,14 +236,13 @@ async def text_to_txt(client, message: Message):
         custom_file_name = raw_textn
 
     txt_file = os.path.join("downloads", f'{custom_file_name}.txt')
-    os.makedirs(os.path.dirname(txt_file), exist_ok=True)  # Ensure the directory exists
+    os.makedirs(os.path.dirname(txt_file), exist_ok=True)
     with open(txt_file, 'w') as f:
         f.write(text_data)
         
     await message.reply_document(document=txt_file, caption=f"`{custom_file_name}.txt`\n\n<blockquote>You can now download your content! 📥</blockquote>")
     os.remove(txt_file)
 
-# Define paths for uploaded file and processed file
 UPLOAD_FOLDER = '/path/to/upload/folder'
 EDITED_FILE_PATH = '/path/to/save/edited_output.txt'
 
@@ -275,14 +259,13 @@ async def youtube_to_txt(client, message: Message):
     await input_message.delete(True)
     await editable.delete(True)
 
-    # Fetch the YouTube information using yt-dlp with cookies
     ydl_opts = {
         'quiet': True,
         'extract_flat': True,
         'skip_download': True,
         'force_generic_extractor': True,
         'forcejson': True,
-        'cookies': 'youtube_cookies.txt'  # Specify the cookies file
+        'cookies': 'youtube_cookies.txt'
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -298,7 +281,6 @@ async def youtube_to_txt(client, message: Message):
             )
             return
 
-    # Extract the YouTube links
     videos = []
     if 'entries' in result:
         for entry in result['entries']:
@@ -310,19 +292,16 @@ async def youtube_to_txt(client, message: Message):
         url = result['url']
         videos.append(f"{video_title}: {url}")
 
-    # Create and save the .txt file with the custom name
     txt_file = os.path.join("downloads", f'{title}.txt')
-    os.makedirs(os.path.dirname(txt_file), exist_ok=True)  # Ensure the directory exists
+    os.makedirs(os.path.dirname(txt_file), exist_ok=True)
     with open(txt_file, 'w') as f:
         f.write('\n'.join(videos))
 
-    # Send the generated text file to the user with a pretty caption
     await message.reply_document(
         document=txt_file,
         caption=f'<a href="{youtube_link}">__**Click Here to Open Link**__</a>\n<blockquote>{title}.txt</blockquote>\n'
     )
 
-    # Remove the temporary text file after sending
     os.remove(txt_file)
 
 @bot.on_message(filters.command(["ytm"]))
@@ -349,7 +328,7 @@ async def txt_handler(bot: Client, m: Message):
              os.remove(x)
              return
 
-        await editable.edit(f"**•ᴛᴏᴛᴀʟ 🔗 ʟɪɴᴋs ғᴏᴜɴᴅ ᴀʀᴇ --__{len(links)}__--\n•sᴇɴᴅ ғʀᴏᴍ ᴡʜᴇʀᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ**")
+        await editable.edit(f"**•ᴛᴏᴛᴀʟ 🔗 ʟɪɴᴋs ғᴏᴜɴᴅ ᴀʀᴇ --__{len(links)}__--\n•sᴇɴᴅ ғʀᴏᴍ ᴡʜᴇʀे ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ**")
         try:
             input0: Message = await bot.listen(editable.chat.id, timeout=20)
             raw_text = input0.text
@@ -385,7 +364,7 @@ async def txt_handler(bot: Client, m: Message):
         return
  
     try:
-        for i in range(arg-1, len(links)):  # Iterate over each link
+        for i in range(arg-1, len(links)):
             if cancel_requested:
                 await m.reply_text("🚦**STOPPED**🚦")
                 processing_request = False
@@ -430,7 +409,6 @@ m_file_path= "main.py"
 @bot.on_message(filters.command("getcookies") & filters.private)
 async def getcookies_handler(client: Client, m: Message):
     try:
-        # Send the cookies file to the user
         await client.send_document(
             chat_id=m.chat.id,
             document=cookies_file_path,
@@ -454,7 +432,7 @@ async def restart_handler(_, m):
     if m.chat.id != OWNER:
         return
     else:
-        await m.reply_text("𝐁𝐨𝐭 𝐢𝐬 𝐑𝐞𝐬𝐞𝐭𝐢𝐧𝐠...", True)
+        await m.reply_text("𝐁𝐨𝐭 𝐢𝐬 𝐑e𝐬𝐞𝐭𝐢𝐧𝐠...", True)
         os.execl(sys.executable, sys.executable, *sys.argv)
 
 @bot.on_message(filters.command("stop") & filters.private)
@@ -489,7 +467,7 @@ async def start(bot, m: Message):
     caption = f"🌟 Welcome {m.from_user.mention} ! 🌟"
     start_message = await bot.send_photo(
         chat_id=m.chat.id,
-        photo="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+        photo="https://files.catbox.moe/28epkq.jpg",
         caption=caption
     )
 
@@ -526,7 +504,6 @@ async def start(bot, m: Message):
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 Features", callback_data="feat_command"), InlineKeyboardButton("🖱️Commands", callback_data="cmd_command")],
             [InlineKeyboardButton("💳 Plans", callback_data="upgrade_command")],
-            #[InlineKeyboardButton(text="📞 Contact", url=f"tg://openmessage?user_id={OWNER}"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
         ])
         
         await start_message.edit_text(
@@ -540,7 +517,6 @@ async def start(bot, m: Message):
         keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 Features", callback_data="feat_command"), InlineKeyboardButton("🖱️Commands", callback_data="cmd_command")],
             [InlineKeyboardButton("💳 Plans", callback_data="upgrade_command")],
-            #[InlineKeyboardButton(text="📞 Contact", url=f"tg://openmessage?user_id={OWNER}"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
         ])
         await start_message.edit_text(
            f" 🎉 Welcome {m.from_user.first_name} to DRM Bot! 🎉\n\n"
@@ -555,12 +531,11 @@ async def back_to_main_menu(client, callback_query):
     keyboard = InlineKeyboardMarkup([
             [InlineKeyboardButton("💎 Features", callback_data="feat_command"), InlineKeyboardButton("🖱️Commands", callback_data="cmd_command")],
             [InlineKeyboardButton("💳 Plans", callback_data="upgrade_command")],
-            #[InlineKeyboardButton(text="📞 Contact", url=f"tg://openmessage?user_id={OWNER}"), InlineKeyboardButton(text="🛠️ Repo", url="https://github.com/nikhilsainiop/saini-txt-direct")],
         ])
     
     await callback_query.message.edit_media(
       InputMediaPhoto(
-        media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+        media="https://files.catbox.moe/28epkq.jpg",
         caption=caption
       ),
       reply_markup=keyboard
@@ -578,7 +553,7 @@ async def cmd(client, callback_query):
     ])
     await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
     ),
     reply_markup=keyboard
@@ -601,7 +576,7 @@ async def help_button(client, callback_query):
         f"➥ /t2t – Text → .txt Generator\n" 
         f"➥ /stop – Cancel Running Task\n"
         f"▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰ \n" 
-        f"⚙️ 𝗧𝗼𝗼𝗹𝘀 & 𝗦𝗲𝘁𝘁𝗶𝗻𝗴𝘀: \n\n" 
+        f"⚙️ 𝗧𝗼𝗼𝗹𝘀 & 𝗦𝗲𝘁𝘁𝗶𝗻𝗴σ: \n\n" 
         f"➥ /cookies – Update YT Cookies\n" 
         f"➥ /id – Get Chat/User ID\n"  
         f"➥ /info – User Details\n"  
@@ -617,7 +592,7 @@ async def help_button(client, callback_query):
     
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
     ),
     reply_markup=keyboard
@@ -644,7 +619,7 @@ async def help_button(client, callback_query):
     
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
     ),
     reply_markup=keyboard
@@ -678,7 +653,7 @@ async def upgrade_button(client, callback_query):
     
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
     ),
     reply_markup=keyboard
@@ -698,7 +673,7 @@ async def feature_button(client, callback_query):
   ])
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
     ),
     reply_markup=keyboard
@@ -710,7 +685,7 @@ async def pin_button(client, callback_query):
   caption = f"**Auto Pin 📌 Batch Name :**\n\nAutomatically Pins the Batch Name in Channel or Group, If Starting from the First Link."
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -722,7 +697,7 @@ async def watermark_button(client, callback_query):
   caption = f"**Custom Watermark :**\n\nSet Your Own Custom Watermark on Videos for Added Personalization."
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -735,7 +710,7 @@ async def restart_button(client, callback_query):
   caption = f"**🔄 Reset Command:**\n\nIf You Want to Reset or Restart Your Bot, Simply Use Command /reset."
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -747,7 +722,7 @@ async def pin_button(client, callback_query):
   caption = f"**🖨️ Bot Working Logs:**\n\n◆/logs - Bot Send Working Logs in .txt File."
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -759,7 +734,7 @@ async def custom_button(client, callback_query):
   caption = f"**🖋️ Custom File Name:**\n\nSupport for Custom Name before the File Extension.\nAdd name ..when txt is uploading"
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -771,7 +746,7 @@ async def titlle_button(client, callback_query):
   caption = f"**Custom Title Feature :**\nAdd and customize titles at the starting\n**NOTE 📍 :** The Titile must enclosed within (Title), Best For appx's .txt file."
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -783,7 +758,7 @@ async def pin_button(client, callback_query):
   caption = f"**📢 Broadcasting Support:**\n\n◆/broadcast - 📢 Broadcast to All Users.\n◆/broadusers - 👁️ To See All Broadcasting User"
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -795,7 +770,7 @@ async def editor_button(client, callback_query):
   caption = f"**🤖 Available Commands 🗓️**\n◆/t2t for text to .txt file\n"
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.png",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -807,7 +782,7 @@ async def y2t_button(client, callback_query):
   caption = f"**YouTube Commands:**\n\n◆/y2t - 🔪 YouTube Playlist → .txt Converter\n◆/ytm - 🎶 YouTube → .mp3 downloader\n\n<blockquote><b>◆YouTube → .mp3 downloader\n01. Send YouTube Playlist.txt file\n02. Send single or multiple YouTube links set\neg.\n`https://www.youtube.com/watch?v=xxxxxx\nhttps://www.youtube.com/watch?v=yyyyyy`</b></blockquote>"
   await callback_query.message.edit_media(
     InputMediaPhoto(
-      media="https://i.ibb.co/v6Vr7HCt/1000003297.jpg",
+      media="https://files.catbox.moe/28epkq.jpg",
       caption=caption
       ),
       reply_markup=keyboard
@@ -829,7 +804,7 @@ async def info(bot: Client, update: Message):
     
     text = (
         f"╭────────────────╮\n"
-        f"│✨ **Your Telegram Info**✨ \n"
+        f"││✨ **Your Telegram Info**✨ \n"
         f"├────────────────\n"
         f"├🔹**Name :** `{update.from_user.first_name} {update.from_user.last_name if update.from_user.last_name else 'None'}`\n"
         f"├🔹**User ID :** @{update.from_user.username}\n"
@@ -846,7 +821,7 @@ async def info(bot: Client, update: Message):
 
 
 @bot.on_message(filters.command(["logs"]))
-async def send_logs(client: Client, m: Message):  # Correct parameter name
+async def send_logs(client: Client, m: Message):
     try:
         with open("logs.txt", "rb") as file:
             sent = await m.reply_text("**📤 Sending you ....**")
@@ -871,7 +846,7 @@ async def txt_handler(bot: Client, m: Message):
     x = await input.download()
     await bot.send_document(OWNER, x)
     await input.delete(True)
-    file_name, ext = os.path.splitext(os.path.basename(x))  # Extract filename & extension
+    file_name, ext = os.path.splitext(os.path.basename(x))
     path = f"./downloads/{m.chat.id}"
     
     pdf_count = 0
@@ -928,7 +903,7 @@ async def txt_handler(bot: Client, m: Message):
     
     if int(raw_text) > len(links) :
         await editable.edit(f"**🔹Enter number in range of Index (01-{len(links)})**")
-        processing_request = False  # Reset the processing flag
+        processing_request = False
         await m.reply_text("**🔹Exiting Task......  **")
         return
         
@@ -987,7 +962,8 @@ async def txt_handler(bot: Client, m: Message):
     else:
         CR = raw_text3
 
-    await editable.edit("**Enter 𝐏𝐖/𝐂𝐖/𝐂𝐏 Working Token For 𝐌𝐏𝐃 𝐔𝐑𝐋 or send /d**\n\n<blockquote><b>Note: If you are downloading Classplus Video, Make sure you joined @bots_updatee this channel.</b></blockquote>")
+    # 📍 जगह 1 - नया वेरिफिकेशन चैनल सेट
+    await editable.edit("**Enter 𝐏𝐖/𝐂𝐖/𝐂𝐏 Working Token For 𝐌𝐏𝐃 𝐔𝐑𝐋 or send /d**\n\n<blockquote><b>Note: If you are downloading Classplus Video, Make sure you joined @sachinbotverification this channel.</b></blockquote>")
     try:
         input4: Message = await bot.listen(editable.chat.id, timeout=20)
         raw_text4 = input4.text
@@ -1021,7 +997,6 @@ async def txt_handler(bot: Client, m: Message):
         raw_text6 = '/d'
 
     if raw_text6.startswith("http://") or raw_text6.startswith("https://"):
-        # If a URL is provided, download thumbnail from the URL
         getstatusoutput(f"wget '{raw_text6}' -O 'thumb.jpg'")
         thumb = "thumb.jpg"
     else:
@@ -1087,18 +1062,18 @@ async def txt_handler(bot: Client, m: Message):
             if "acecwply" in url:
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
 
+            # 📍 जगह 2 - नया वेरिफिकेशन चैनल सेट
             elif "https://cpvod.testbook.com/" in url or "classplusapp.com/drm/" in url:
                 url = url.replace("https://cpvod.testbook.com/","https://media-cdn.classplusapp.com/drm/")
-                url = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@bots_updatee&user_id={user_id}"
-                #url = f"https://scammer-keys.vercel.app/api?url={url}&token={cptoken}&auth=@scammer_botxz1"
+                url = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@sachinbotverification&user_id={user_id}"
                 mpd, keys = helper.get_mps_and_keys(url)
                 url = mpd
                 keys_string = " ".join([f"--key {key}" for key in keys])
 
+            # 📍 जगह 3 - नया वेरिफिकेशन चैनल सेट
             elif "classplusapp" in url:
-                signed_api = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@bots_updatee&user_id={user_id}"
+                signed_api = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@sachinbotverification&user_id={user_id}"
                 response = requests.get(signed_api, timeout=20)
-                #url = response.text.strip()
                 url = response.json()['url']  
                     
             elif "tencdn.classplusapp" in url:
@@ -1168,7 +1143,7 @@ async def txt_handler(bot: Client, m: Message):
                     ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{v_name} .jpg`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                     cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{v_name} .html`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                     ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name} .mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                    ccm = f'[🎵]Mp3 Id : {str(count).zfill(3)}\n**Audio Title :** `{v_name} .mp3`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
+                    ccpt = f'[🎵]Mp3 Id : {str(count).zfill(3)}\n**Audio Title :** `{v_name} .mp3`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                 else:
                     cc = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{name1} [{res}p] .mkv`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n'
                     cc1 = f'[📕]Pdf Id : {str(count).zfill(3)}\n**File Title :** `{name1} .pdf`\n<blockquote><b>Batch Name :</b> {b_name}</blockquote>\n\n**Extracted by➤**{CR}\n'
@@ -1190,10 +1165,10 @@ async def txt_handler(bot: Client, m: Message):
   
                 elif ".pdf" in url:
                     if "cwmediabkt99" in url:
-                        max_retries = 15  # Define the maximum number of retries
-                        retry_delay = 4  # Delay between retries in seconds
-                        success = False  # To track whether the download was successful
-                        failure_msgs = []  # To keep track of failure messages
+                        max_retries = 15
+                        retry_delay = 4
+                        success = False
+                        failure_msgs = []
                         
                         for attempt in range(max_retries):
                             try:
@@ -1205,12 +1180,12 @@ async def txt_handler(bot: Client, m: Message):
                                 if response.status_code == 200:
                                     with open(f'{name}.pdf', 'wb') as file:
                                         file.write(response.content)
-                                    await asyncio.sleep(retry_delay)  # Optional, to prevent spamming
+                                    await asyncio.sleep(retry_delay)
                                     copy = await bot.send_document(chat_id=channel_id, document=f'{name}.pdf', caption=cc1)
                                     count += 1
                                     os.remove(f'{name}.pdf')
                                     success = True
-                                    break  # Exit the retry loop if successful
+                                    break
                                 else:
                                     failure_msg = await m.reply_text(f"Attempt {attempt + 1}/{max_retries} failed: {response.status_code} {response.reason}")
                                     failure_msgs.append(failure_msg)
@@ -1283,7 +1258,7 @@ async def txt_handler(bot: Client, m: Message):
                            f"┣🔗𝐈𝐧𝐝𝐞𝐱 » {count}/{len(links)}\n┃\n" \
                            f"╰━🖇️𝐑𝐞𝐦𝐚𝐢𝐧 » {remaining_links}\n" \
                            f"━━━━━━━━━━━━━━━━━━━━━━━━\n" \
-                           f"<blockquote><b>⚡Dᴏᴡɴʟᴏᴀᴅɪɴɢ Eɴᴄʀʏᴘᴛᴇᴅ Sᴛᴀʀᴛᴇᴅ...⏳</b></blockquote>\n┃\n" \
+                           f"<blockquote><b>⚡Dᴏᴡɴʟᴏᴀᴅɪɴ Eɴᴄʀʏᴘᴛᴇᴅ Sᴛᴀʀᴛᴇᴅ...⏳</b></blockquote>\n┃\n" \
                            f'┣💃𝐂𝐫𝐞𝐝𝐢𝐭 » {CR}\n┃\n' \
                            f"╰━📚𝐁𝐚𝐭𝐜𝐡 » {b_name}\n" \
                            f"━━━━━━━━━━━━━━━━━━━━━━━━━\n" \
@@ -1377,10 +1352,8 @@ async def txt_handler(bot: Client, m: Message):
 
     success_count = len(links) - failed_count
     video_count = v2_count + mpd_count + m3u8_count + yt_count + drm_count + zip_count + other_count
-    if raw_text7 == "/d":
-        await bot.send_message(channel_id, f"<b>-┈━═.•°✅ Completed ✅°•.═━┈-</b>\n<blockquote><b>🎯Batch Name : {b_name}</b></blockquote>\n<blockquote>🔗 Total URLs: {len(links)} \n┃   ┠🔴 Total Failed URLs: {failed_count}\n┃   ┠🟢 Total Successful URLs: {success_count}\n┃   ┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n")
-    else:
-        await bot.send_message(channel_id, f"<b>-┈━═.•°✅ Completed ✅°•.═━┈-</b>\n<blockquote><b>🎯Batch Name : {b_name}</b></blockquote>\n<blockquote>🔗 Total URLs: {len(links)} \n┃   ┠🔴 Total Failed URLs: {failed_count}\n┃   ┠🟢 Total Successful URLs: {success_count}\n┃   ┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n")
+    await bot.send_message(channel_id, f"<b>-┈━═.•°✅ Completed ✅°•.═━┈-</b>\n<blockquote><b>🎯Batch Name : {b_name}</b></blockquote>\n<blockquote>🔗 Total URLs: {len(links)} \n┃   ┠🔴 Total Failed URLs: {failed_count}\n┃   ┠🟢 Total Successful URLs: {success_count}\n┃   ┃   ┠🎥 Total Video URLs: {video_count}\n┃   ┃   ┠📄 Total PDF URLs: {pdf_count}\n┃   ┃   ┠📸 Total IMAGE URLs: {img_count}</blockquote>\n")
+    if raw_text7 != "/d":
         await bot.send_message(m.chat.id, f"<blockquote><b>✅ Your Task is completed, please check your Set Channel📱</b></blockquote>")
 
 
@@ -1460,18 +1433,18 @@ async def text_handler(bot: Client, m: Message):
             if "acecwply" in url:
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
 
+            # 📍 जगह 4 - नया वेरिफिकेशन चैनल सेट
             elif "https://cpvod.testbook.com/" in url or "classplusapp.com/drm/" in url:
                 url = url.replace("https://cpvod.testbook.com/","https://media-cdn.classplusapp.com/drm/")
-                url = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee&user_id={user_id}"
-                #url = f"https://scammer-keys.vercel.app/api?url={url}&token={cptoken}&auth=@scammer_botxz1"
+                url = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@sachinbotverification&user_id={user_id}"
                 mpd, keys = helper.get_mps_and_keys(url)
                 url = mpd
                 keys_string = " ".join([f"--key {key}" for key in keys])
 
+            # 📍 जगह 5 - नया वेरिफिकेशन चैनल सेट
             elif "classplusapp" in url:
-                signed_api = f"https://cpapi-rjbs.onrender.com/extract_keys?url={url}@bots_updatee&user_id={user_id}"
+                signed_api = f"https://cpapi-rjbs-1l0p.onrender.com/extract_keys?url={url}@sachinbotverification&user_id={user_id}"
                 response = requests.get(signed_api, timeout=20)
-                #url = response.text.strip()
                 url = response.json()['url']  
 
             elif "tencdn.classplusapp" in url:
@@ -1536,10 +1509,10 @@ async def text_handler(bot: Client, m: Message):
 
                 elif ".pdf" in url:
                     if "cwmediabkt99" in url:
-                        max_retries = 15  # Define the maximum number of retries
-                        retry_delay = 4  # Delay between retries in seconds
-                        success = False  # To track whether the download was successful
-                        failure_msgs = []  # To keep track of failure messages
+                        max_retries = 15
+                        retry_delay = 4
+                        success = False
+                        failure_msgs = []
                         
                         for attempt in range(max_retries):
                             try:
@@ -1551,11 +1524,11 @@ async def text_handler(bot: Client, m: Message):
                                 if response.status_code == 200:
                                     with open(f'{name}.pdf', 'wb') as file:
                                         file.write(response.content)
-                                    await asyncio.sleep(retry_delay)  # Optional, to prevent spamming
+                                    await asyncio.sleep(retry_delay)
                                     copy = await bot.send_document(chat_id=m.chat.id, document=f'{name}.pdf', caption=cc1)
                                     os.remove(f'{name}.pdf')
                                     success = True
-                                    break  # Exit the retry loop if successful
+                                    break
                                 else:
                                     failure_msg = await m.reply_text(f"Attempt {attempt + 1}/{max_retries} failed: {response.status_code} {response.reason}")
                                     failure_msgs.append(failure_msg)
@@ -1564,15 +1537,13 @@ async def text_handler(bot: Client, m: Message):
                                 failure_msg = await m.reply_text(f"Attempt {attempt + 1}/{max_retries} failed: {str(e)}")
                                 failure_msgs.append(failure_msg)
                                 await asyncio.sleep(retry_delay)
-                                continue  # Retry the next attempt if an exception occurs
+                                continue
 
-                        # Delete all failure messages if the PDF is successfully downloaded
                         for msg in failure_msgs:
                             await msg.delete()
                             
                         if not success:
-                            # Send the final failure message if all retries fail
-                            await m.reply_text(f"Failed to download PDF after {max_retries} attempts.\n⚠️**Downloading Failed**⚠️\n**Name** =>> {str(count).zfill(3)} {name1}\n**Url** =>> {link0}", disable_web_page_preview)
+                            await m.reply_text(f"Failed to download PDF after {max_retries} attempts.\n⚠️**Downloading Failed**⚠️\n**Name** =>> {str(count).zfill(3)} {name1}\n**Url** =>> {link0}")
                             
                     else:
                         try:
@@ -1614,7 +1585,7 @@ async def text_handler(bot: Client, m: Message):
                         pass
                                 
                 elif 'encrypted.m' in url:    
-                    Show = f"**⚡Dᴏᴡɴʟᴏᴀᴅɪɴɢ Sᴛᴀʀᴛᴇᴅ...⏳**\n" \
+                    Show = f"**⚡DᴏᴡɴbᴏᴀᴅLɴɢ SᴛGFʀᴛᴇᴅ...⏳**\n" \
                            f"<blockquote expandable>🔗𝐋𝐢𝐧𝐤 » {url}</blockquote>\n" \
                            f"✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}"
                     prog = await m.reply_text(Show, disable_web_page_preview=True)
@@ -1626,7 +1597,7 @@ async def text_handler(bot: Client, m: Message):
                     pass
 
                 elif 'drmcdni' in url or 'drm/wv' in url:
-                    Show = f"**⚡Dᴏᴡɴʟᴏᴀᴅɪɴɢ Sᴛᴀʀᴛᴇᴅ...⏳**\n" \
+                    Show = f"**⚡Dᴏᴡɴbᴏᴀᴅbɴɢ SᴛGFʀᴛᴇᴅ...⏳**\n" \
                            f"<blockquote expandable>🔗𝐋𝐢𝐧𝐤 » {url}</blockquote>\n" \
                            f"✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}"
                     prog = await m.reply_text(Show, disable_web_page_preview=True)
@@ -1638,7 +1609,7 @@ async def text_handler(bot: Client, m: Message):
                     pass
      
                 else:
-                    Show = f"**⚡Dᴏᴡɴʟᴏᴀᴅɪɴɢ Sᴛᴀʀᴛᴇᴅ...⏳**\n" \
+                    Show = f"**⚡Dᴏᴡɴbᴏᴀᴅbɴɢ SᴛGFʀᴛᴇᴅ...⏳**\n" \
                            f"<blockquote expandable>🔗𝐋𝐢𝐧𝐤 » {url}</blockquote>\n" \
                            f"✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}"
                     prog = await m.reply_text(Show, disable_web_page_preview=True)
@@ -1655,7 +1626,7 @@ async def text_handler(bot: Client, m: Message):
     except Exception as e:
         await m.reply_text(str(e))
 
-#...............…........
+# .............................
 def notify_owner():
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {
@@ -1667,9 +1638,7 @@ def notify_owner():
 
 def reset_and_set_commands():
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/setMyCommands"
-    # Reset
     requests.post(url, json={"commands": []})
-    # Set new
     commands = [
         {"command": "start", "description": "✅ Check Alive the Bot"},
         {"command": "stop", "description": "🚫 Stop the ongoing process"},
@@ -1689,8 +1658,6 @@ def reset_and_set_commands():
         {"command": "users", "description": "👨‍👨‍👧‍👦 All Premium Users"}
     ]
     requests.post(url, json={"commands": commands})
-    
-
 
 
 if __name__ == "__main__":
