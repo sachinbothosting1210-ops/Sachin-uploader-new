@@ -1660,9 +1660,31 @@ def reset_and_set_commands():
     requests.post(url, json={"commands": commands})
 
 
-if __name__ == "__main__":
+# --- BACKGROUND WEB SERVER FOR RENDER HEALTH CHECKS ---
+async def web_handler(request):
+    return web.Response(text="Saini Txt Leech Bot is Running Successfully 24/7 Live! ✅")
+
+async def start_web_server():
+    app = web.Application()
+    app.router.add_get("/", web_handler)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    # Render द्वारा दिए गए PORT को उठाएगा, नहीं तो 8000 का इस्तेमाल करेगा
+    port = int(os.environ.get("PORT", 8000))
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    print(f"[INFO] Web server started on port {port} for Render keep-alive!")
+
+async def main():
+    # पहले बैकग्राउंड वेब सर्वर चालू होगा ताकि रेंडर का पिंग काम करे
+    await start_web_server()
+    # फिर आपका टेलीग्राम बोट शुरू होगा
     reset_and_set_commands()
-    notify_owner() 
+    notify_owner()
+    await bot.start()
+    print("[INFO] Telegram Bot Started Successfully!")
+    await asyncio.Event().wait() # बोट को हमेशा चालू रखेगा
 
-
-bot.run()
+if __name__ == "__main__":
+    # पुराने bot.run() को हटाकर इसे asyncio लूप में चला रहे हैं
+    asyncio.get_event_loop().run_until_complete(main())
