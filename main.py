@@ -201,6 +201,25 @@ async def broadusers_handler(client: Client, message: Message):
             fname = user.first_name if user.first_name else " "
             user_infos.append(f"[{user.id}](tg://openmessage?user_id={user.id}) | `{fname}`")
         except Exception:
+            # यहाँ मैंने user.id की जगह सटीक user_id वेरिएबल सेट कर दिया है
+            user_infos.append(f"[{user_id}](tg://openmessage?user_id={user_id})")
+
+    total = len(user_infos)
+    text = (
+        f"<blockquote><b>Total Users: {total}</b></blockquote>\n\n"
+        "<b>Users List:</b>\n"
+        + "\n".join(user_infos)
+    )
+    await message.reply_text(text)
+
+
+    user_infos = []
+    for user_id in list(set(TOTAL_USERS)):
+        try:
+            user = await client.get_users(int(user_id))
+            fname = user.first_name if user.first_name else " "
+            user_infos.append(f"[{user.id}](tg://openmessage?user_id={user.id}) | `{fname}`")
+        except Exception:
             user_infos.append(f"[{user.id}](tg://openmessage?user_id={user.id})")
 
     total = len(user_infos)
